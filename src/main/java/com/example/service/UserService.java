@@ -5,6 +5,7 @@ import com.example.model.User;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     List<User> getAllUsers();
@@ -16,5 +17,6 @@ public interface UserService {
     void addUserRoles(Long userId, String userRoles);
     Role findByRole(String role);
     Role findByRole(Long id);
+    Set<Role> findByRole(Set<Long> roleId);
     List<Role> getAllRoles();
 }

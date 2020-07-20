@@ -4,6 +4,9 @@ import com.example.model.Role;
 import com.example.model.User;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,6 +24,10 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public List getAllUsers() {
         return entityManager.createQuery("FROM User").getResultList();
@@ -35,6 +42,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         entityManager.persist(user);
     }
 
@@ -45,6 +53,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         entityManager.merge(user);
     }
 

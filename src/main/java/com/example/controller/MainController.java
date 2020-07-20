@@ -50,13 +50,13 @@ public class MainController {
     }
 
     @PostMapping("adduser")
-    public String addUser(@RequestParam(value = "role_id", required = false) Long roleId,
+    public String addUser(@RequestParam(value = "role_id", required = false) Set<Long> roleId,
                           @Validated User user, BindingResult result,
                           ModelMap model) {
         if (result.hasErrors()) {
             return "add-user";
         }
-        user.setRoles(Collections.singleton(userService.findByRole(roleId)));
+        user.setRoles(userService.findByRole(roleId));
         userService.addUser(user);
         model.addAttribute("users", userService.getAllUsers());
         return "index";
@@ -71,14 +71,14 @@ public class MainController {
     }
 
     @PostMapping("update/{id}")
-    public String updateUser(@RequestParam(value = "role_id") Long roleId,
+    public String updateUser(@RequestParam(value = "role_id") Set<Long> roleId,
                              @PathVariable("id") long id, @Validated User user,
                              BindingResult result, Model model, HttpSession session) {
         if (result.hasErrors()) {
             user.setId(id);
             return "update-user";
         }
-        user.setRoles(Collections.singleton(userService.findByRole(roleId)));
+        user.setRoles(userService.findByRole(roleId));
         userService.updateUser(user);
         model.addAttribute("user", session.getAttribute("user"));
         model.addAttribute("users", userService.getAllUsers());
